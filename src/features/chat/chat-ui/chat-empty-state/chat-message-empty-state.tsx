@@ -35,7 +35,7 @@ export const ChatMessageEmptyState: FC<Prop> = (props) => {
         </div>
         <div className="flex flex-col gap-2">
           <p className="text-sm text-muted-foreground">
-            How would you like to chat?更新！！
+            チャット！How would you like to chat?更新！！
           </p>
           <ChatTypeSelector disable={false} />
         </div>
