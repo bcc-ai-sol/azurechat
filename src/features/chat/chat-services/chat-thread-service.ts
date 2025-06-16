@@ -86,13 +86,15 @@ export const SoftDeleteChatThreadByID = async (chatThreadID: string) => {
   if (threads.length !== 0) {
     const chats = await FindAllChats(chatThreadID);
 
-    chats.forEach(async (chat) => {
-      const itemToUpdate = {
-        ...chat,
-      };
-      itemToUpdate.isDeleted = true;
-      await container.items.upsert(itemToUpdate);
-    });
+    await Promise.all(
+      chats.map(async (chat) => {
+        const itemToUpdate = {
+          ...chat,
+        };
+        itemToUpdate.isDeleted = true;
+        await container.items.upsert(itemToUpdate);
+      })
+    );
 
     const chatDocuments = await FindAllChatDocuments(chatThreadID);
 
@@ -100,21 +102,25 @@ export const SoftDeleteChatThreadByID = async (chatThreadID: string) => {
       await DeleteDocuments(chatThreadID);
     }
 
-    chatDocuments.forEach(async (chatDocument) => {
-      const itemToUpdate = {
-        ...chatDocument,
-      };
-      itemToUpdate.isDeleted = true;
-      await container.items.upsert(itemToUpdate);
-    });
+    await Promise.all(
+      chatDocuments.map(async (chatDocument) => {
+        const itemToUpdate = {
+          ...chatDocument,
+        };
+        itemToUpdate.isDeleted = true;
+        await container.items.upsert(itemToUpdate);
+      })
+    );
 
-    threads.forEach(async (thread) => {
-      const itemToUpdate = {
-        ...thread,
-      };
-      itemToUpdate.isDeleted = true;
-      await container.items.upsert(itemToUpdate);
-    });
+    await Promise.all(
+      threads.map(async (thread) => {
+        const itemToUpdate = {
+          ...thread,
+        };
+        itemToUpdate.isDeleted = true;
+        await container.items.upsert(itemToUpdate);
+      })
+    );
   }
 };
 
